@@ -2,7 +2,7 @@
 
 Android 原生个人体重管理应用：**记录 → 分析 → 建议 → 调整 → 再记录** 的长期闭环。
 
-- 版本：v3.3（versionCode 6）
+- 版本：v3.4（versionCode 7）
 - 架构：Kotlin + Jetpack Compose (Material 3) + Clean/MVVM + Hilt + Room + DataStore
 - 最低系统：Android 8.0（API 26）；目标系统：Android 14（API 34）
 
@@ -103,3 +103,4 @@ app/src/main/java/com/weightmanagement/app/
 | 3.1 | 趋势图 X 轴全部时间点倾斜 45° 展示、AI 接口配置「检测」按钮、支持直接拉起相机拍照识别（相册上传保留并修复读取失败 bug） |
 | 3.2 | AI 食物识别移植开源项目 NutriTracker（中文营养师 prompt、复合菜拆解、失败原因透出）；饮食页改为单一「今日所吃」列表 + 添加时选餐别；日期选择固定首项「今天」可随时切回 |
 | 3.3 | 修复切换日期后「今日所吃」列表残留旧数据的 bug（改为按日单 SQL 观测，含自测单测） |
+| 3.4 | 添加记录/识别确认支持「自动估算营养」（本地库精确匹配优先，AI 兜底）；应用内检查更新（GitHub version.json） |
