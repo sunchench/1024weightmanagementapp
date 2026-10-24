@@ -235,14 +235,12 @@ fun NutritionScreen(navController: NavHostController, viewModel: NutritionViewMo
             }
             Spacer(Modifier.height(12.dp))
 
-            // 今日所吃：单一区块 + 记录列表 + 底部操作按钮
+            // 今日所吃：标题 → 操作按钮行（固定在标题下方）→ 记录列表
             SectionCard(title = if (selectedDay == today) "今日所吃" else "${dayLabel(selectedDay)} 所吃") {
-                // 全部记录（按时间倒序，跨餐别）
-                DayIntakeList(viewModel = viewModel)
-                Spacer(Modifier.height(10.dp))
+                // 三个操作按钮：等宽、同一 Button 样式、图标统一 18dp
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { addTarget = null; showAddMealPicker = true }, modifier = Modifier.weight(1f)) {
-                        Icon(Icons.Filled.Add, contentDescription = null)
+                        Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.height(18.dp))
                         Text("添加记录")
                     }
                     Button(
@@ -258,20 +256,23 @@ fun NutritionScreen(navController: NavHostController, viewModel: NutritionViewMo
                         },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(Icons.Filled.PhotoCamera, contentDescription = null)
+                        Icon(Icons.Filled.PhotoCamera, contentDescription = null, modifier = Modifier.height(18.dp))
                         Text("拍照")
                     }
-                    androidx.compose.material3.OutlinedButton(
+                    Button(
                         onClick = {
                             photoMealTarget = autoMealTypeNow()
                             pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                         },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(Icons.Filled.PhotoLibrary, contentDescription = null)
+                        Icon(Icons.Filled.PhotoLibrary, contentDescription = null, modifier = Modifier.height(18.dp))
                         Text("相册")
                     }
                 }
+                Spacer(Modifier.height(10.dp))
+                // 全部记录（按时间倒序，跨餐别），在按钮行下方
+                DayIntakeList(viewModel = viewModel)
             }
             Spacer(Modifier.height(16.dp))
         }

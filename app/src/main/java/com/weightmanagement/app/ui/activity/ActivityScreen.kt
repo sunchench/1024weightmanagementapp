@@ -53,8 +53,12 @@ private val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA)
 @Composable
 fun ActivityScreen(navController: NavHostController, viewModel: ActivityViewModel = androidx.hilt.navigation.compose.hiltViewModel()) {
     val activities by viewModel.activities.collectAsStateWithLifecycle()
+    val availableDays by viewModel.availableDays.collectAsStateWithLifecycle()
+    val selectedDay by viewModel.selectedDay.collectAsStateWithLifecycle()
     val user by viewModel.user.collectAsStateWithLifecycle()
     var showAdd by remember { mutableStateOf(false) }
+
+    val today = com.weightmanagement.app.domain.util.DateUtils.dayStart()
 
     if (showAdd) {
         AddActivityDialog(
@@ -70,10 +74,27 @@ fun ActivityScreen(navController: NavHostController, viewModel: ActivityViewMode
     Column(Modifier.fillMaxSize()) {
         AppTopBar(title = "运动记录")
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp)) {
-            SectionCard(title = "今日运动消耗") {
-                val todayBurned = activities.filter { it.startTime >= com.weightmanagement.app.domain.util.DateUtils.dayStart() }
-                    .sumOf { it.caloriesBurned.toDouble() }.toFloat()
-                Text("${format0(todayBurned)} kcal", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            // 历史日期选择（与饮水页一致，首项固定「今天」）
+            Text("选择日期", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Spacer(Modifier.height(6.dp))
+            androidx.compose.foundation.lazy.LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(listOf(today) + availableDays.filter { it != today }.distinct()) { day ->
+                    val selected = day == selectedDay
+                    androidx.compose.material3.AssistChip(
+                        onClick = { viewModel.selectDay(day) },
+                        label = { Text(if (day == today) "今天" else dayLabel(day)) },
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(50),
+                        border = if (selected) androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
+                    )
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+
+            SectionCard(title = if (selectedDay == today) "今日运动消耗" else "${dayLabel(selectedDay)} 运动消耗") {
+                val dayBurned = activities.sumOf { it.caloriesBurned.toDouble() }.toFloat()
+                Text("${format0(dayBurned)} kcal", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             }
             Spacer(Modifier.height(12.dp))
             Button(onClick = { showAdd = true }, modifier = Modifier.fillMaxWidth()) {
@@ -81,8 +102,14 @@ fun ActivityScreen(navController: NavHostController, viewModel: ActivityViewMode
                 Text("添加运动")
             }
             Spacer(Modifier.height(12.dp))
-            LazyColumn(modifier = Modifier.fillMaxWidth().height(320.dp)) {
-                items(activities) { a ->
+            if (activities.isEmpty()) {
+                Text(
+                    "暂无记录，点上方「添加运动」开始",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                activities.forEach { a ->
                     Card(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
                         Row(
                             Modifier.fillMaxWidth().padding(12.dp),
@@ -104,6 +131,15 @@ fun ActivityScreen(navController: NavHostController, viewModel: ActivityViewMode
             }
             Spacer(Modifier.height(16.dp))
         }
+    }
+}
+
+private fun dayLabel(ts: Long): String {
+    val today = com.weightmanagement.app.domain.util.DateUtils.dayStart()
+    return when (ts) {
+        today -> "今天"
+        today - 24L * 3600 * 1000 -> "昨天"
+        else -> com.weightmanagement.app.domain.util.DateUtils.formatDateTime(ts).substring(0, 10)
     }
 }
 

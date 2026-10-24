@@ -16,6 +16,10 @@ interface ActivityDao {
     @Query("SELECT * FROM activity_log WHERE startTime >= :from")
     fun getSince(from: Long): Flow<List<ActivityEntity>>
 
+    /** 指定时间窗（本地时区某天）的运动记录 */
+    @Query("SELECT * FROM activity_log WHERE startTime >= :from AND startTime < :to ORDER BY startTime DESC")
+    fun observeBetween(from: Long, to: Long): Flow<List<ActivityEntity>>
+
     @Query("SELECT COALESCE(SUM(caloriesBurned),0) FROM activity_log WHERE startTime >= :from")
     fun observeBurnedSince(from: Long): Flow<Float>
 

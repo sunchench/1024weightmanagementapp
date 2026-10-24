@@ -5,6 +5,7 @@ import com.weightmanagement.app.data.local.entity.ActivityEntity
 import com.weightmanagement.app.domain.calculator.MetLibrary
 import com.weightmanagement.app.domain.util.DateUtils
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,6 +15,15 @@ class ActivityRepository @Inject constructor(
 ) {
     fun observeAll(): Flow<List<ActivityEntity>> = activityDao.observeAll()
     fun observeTodayBurned(): Flow<Float> = activityDao.observeBurnedSince(DateUtils.dayStart())
+
+    /** 指定日（本地时区当天 00:00 ~ 次日 00:00）的运动记录 */
+    fun observeByDay(day: Long): Flow<List<ActivityEntity>> =
+        activityDao.observeBetween(day, DateUtils.dayEnd(day))
+
+    /** 所有有运动记录的日期（去重、倒序），用于历史日期选择 */
+    fun observeAllDays(): Flow<List<Long>> = activityDao.observeAll().map { list ->
+        list.map { DateUtils.dayStart(it.startTime) }.distinct().sortedDescending()
+    }
 
     suspend fun add(
         type: String,

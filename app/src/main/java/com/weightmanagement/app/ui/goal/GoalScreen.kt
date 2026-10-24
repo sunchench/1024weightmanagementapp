@@ -44,6 +44,8 @@ fun GoalScreen(navController: NavHostController, viewModel: GoalViewModel = andr
     val goal by viewModel.goal.collectAsStateWithLifecycle()
     val recommendations by viewModel.recommendations.collectAsStateWithLifecycle()
 
+    var saveResult by remember { mutableStateOf<Pair<Boolean, String>?>(null) }
+
     var targetWeight by remember { mutableStateOf(user?.targetWeightKg?.toString() ?: "65") }
     var goalType by remember { mutableStateOf(user?.goalType ?: "lose") }
     var activityLevel by remember { mutableStateOf(user?.activityLevel ?: "moderate") }
@@ -120,10 +122,26 @@ fun GoalScreen(navController: NavHostController, viewModel: GoalViewModel = andr
                             goalType = goalType,
                             activityLevel = activityLevel
                         )
-                        viewModel.update(updated)
+                        viewModel.update(updated) { ok, msg ->
+                            saveResult = (ok to msg)
+                        }
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) { Text("保存并重新计算目标") }
+                // 保存结果提示（成功/失败，2.5s 后自动消失）
+                saveResult?.let { (ok, msg) ->
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        msg,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (ok) androidx.compose.ui.graphics.Color(0xFF2E7D32) else MaterialTheme.colorScheme.error,
+                        fontWeight = FontWeight.Medium
+                    )
+                    androidx.compose.runtime.LaunchedEffect(saveResult) {
+                        kotlinx.coroutines.delay(2500)
+                        saveResult = null
+                    }
+                }
             }
             Spacer(Modifier.height(16.dp))
         }

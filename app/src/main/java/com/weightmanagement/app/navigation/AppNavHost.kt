@@ -93,15 +93,19 @@ fun AppNavHost(
                     val items = TAB_ITEMS
                     val navDest = navBackStackEntry?.destination
                     items.forEach { (route, label, icon) ->
+                        val isHome = route == Routes.DASHBOARD
                         NavigationBarItem(
                             selected = navDest?.hierarchy?.any { it.route == route } == true,
                             onClick = {
                                 navController.navigate(route) {
                                     popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
+                                        saveState = !isHome
+                                        inclusive = false
                                     }
                                     launchSingleTop = true
-                                    restoreState = true
+                                    // 首页是起始目的地且必须全新进入（不恢复旧的嵌套页面状态），
+                                    // 其他页签保留状态以便切回时不丢滚动位置
+                                    restoreState = !isHome
                                 }
                             },
                             icon = { Icon(icon, contentDescription = label) },

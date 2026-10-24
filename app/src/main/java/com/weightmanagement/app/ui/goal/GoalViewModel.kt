@@ -60,10 +60,15 @@ class GoalViewModel @Inject constructor(
         }
     }
 
-    fun update(user: UserEntity) {
+    fun update(user: UserEntity, onDone: (Boolean, String) -> Unit = { _, _ -> }) {
         viewModelScope.launch {
-            profileRepository.saveUser(user)
-            refreshRecommendations()
+            try {
+                profileRepository.saveUser(user)
+                refreshRecommendations()
+                onDone(true, "目标已更新，营养目标已重新计算")
+            } catch (e: Exception) {
+                onDone(false, "保存失败：${e.message ?: e.javaClass.simpleName}")
+            }
         }
     }
 }
