@@ -1,14 +1,14 @@
 {
-  "versionCode": 9,
-  "versionName": "3.6",
+  "versionCode": 10,
+  "versionName": "3.7",
   "releaseDate": "2026-10-24",
   "downloadUrl": "https://github.com/sunchench/1024weightmanagementapp/releases/latest",
-  "apkUrl": "https://github.com/sunchench/1024weightmanagementapp/releases/download/v3.6/weight-management-v3.6.apk",
+  "apkUrl": "https://github.com/sunchench/1024weightmanagementapp/releases/download/v3.7/weight-management-v3.7.apk",
   "releaseNotes": [
+    "v3.7：修复 release 包安装失败（debug/release 统一正式签名，可互相覆盖安装）",
     "v3.6：饮食页布局优化（操作按钮固定标题下方）；目标保存成功/失败提示；运动页日期历史；修复底部导航切首页失效",
     "v3.5：App 内直接下载更新包并唤起安装（无需浏览器）",
     "v3.4：添加/识别记录支持 AI 自动估算营养值",
-    "v3.3：修复切换日期后记录列表残留旧数据",
-    "v3.2：拍照识别移植 NutriTracker（失败原因透出）；饮食页合并为单一列表"
+    "v3.3：修复切换日期后记录列表残留旧数据"
   ]
 }
