@@ -42,7 +42,8 @@ class SettingsViewModel @Inject constructor(
         data class Available(
             val versionName: String,
             val releaseNotes: List<String>,
-            val downloadUrl: String
+            val downloadUrl: String,
+            val apkUrl: String
         ) : UpdateUiState()
         data class Error(val message: String) : UpdateUiState()
     }
@@ -68,11 +69,37 @@ class SettingsViewModel @Inject constructor(
                 is com.weightmanagement.app.data.remote.UpdateChecker.Result.UpToDate ->
                     UpdateUiState.UpToDate(r.currentName)
                 is com.weightmanagement.app.data.remote.UpdateChecker.Result.UpdateAvailable ->
-                    UpdateUiState.Available(r.remote.versionName, r.remote.releaseNotes, r.remote.downloadUrl)
+                    UpdateUiState.Available(
+                        r.remote.versionName,
+                        r.remote.releaseNotes,
+                        r.remote.downloadUrl,
+                        r.remote.apkUrl
+                    )
                 is com.weightmanagement.app.data.remote.UpdateChecker.Result.Error ->
                     UpdateUiState.Error(r.message)
             }
         }
+    }
+
+    /** App 内下载 APK（系统 DownloadManager，通知栏看进度） */
+    fun downloadUpdate(versionName: String, apkUrl: String, onResult: (String) -> Unit) {
+        if (apkUrl.isBlank()) {
+            onResult("NO_APK_URL")
+            return
+        }
+        onResult(
+            com.weightmanagement.app.data.remote.ApkDownloadManager.downloadApk(application, apkUrl, versionName)
+        )
+    }
+
+    /** 下载完成后打开 APK 安装；返回 null=已唤起安装器，NEED_INSTALL_PERMISSION=需授权 */
+    fun installUpdate(versionName: String): String? {
+        return com.weightmanagement.app.data.remote.ApkDownloadManager.installApk(application, versionName)
+    }
+
+    /** 跳转「允许安装未知应用」设置页 */
+    fun requestInstallPermission() {
+        com.weightmanagement.app.data.remote.ApkDownloadManager.requestInstallPermission(application)
     }
 
     fun resetUpdateState() {

@@ -269,9 +269,55 @@ private fun AboutSection(viewModel: SettingsViewModel) {
                 }
                 Spacer(Modifier.height(8.dp))
                 val ctx = androidx.compose.ui.platform.LocalContext.current
+                var installMsg by remember { mutableStateOf<String?>(null) }
+                if (installMsg != null) {
+                    Text(
+                        installMsg!!,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    // 需要安装权限时给一键跳转按钮
+                    if (installMsg == "NEED_INSTALL_PERMISSION") {
+                        Spacer(Modifier.height(6.dp))
+                        Button(onClick = { viewModel.requestInstallPermission() }, modifier = Modifier.fillMaxWidth()) {
+                            Text("去开启「允许安装未知应用」")
+                        }
+                        Spacer(Modifier.height(6.dp))
+                    }
+                }
                 Button(
                     onClick = {
-                        // 打开系统浏览器到下载页
+                        viewModel.downloadUpdate(u.versionName, u.apkUrl) { result ->
+                            when (result) {
+                                "NO_APK_URL" -> {
+                                    // 无 APK 直链 → 浏览器兜底
+                                    val intent = android.content.Intent(
+                                        android.content.Intent.ACTION_VIEW,
+                                        android.net.Uri.parse(u.downloadUrl)
+                                    )
+                                    ctx.startActivity(android.content.Intent.createChooser(intent, "选择浏览器打开下载页"))
+                                }
+                                else -> installMsg = "下载已开始（通知栏查看进度）；下载完成后点「安装更新」"
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("下载更新（v${u.versionName}）") }
+                Spacer(Modifier.height(6.dp))
+                androidx.compose.material3.OutlinedButton(
+                    onClick = {
+                        val r = viewModel.installUpdate(u.versionName)
+                        installMsg = when (r) {
+                            null -> "已唤起安装器，请在系统界面确认安装"
+                            "NEED_INSTALL_PERMISSION" -> "NEED_INSTALL_PERMISSION"
+                            else -> r
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("安装更新（下载完成后点此）") }
+                Spacer(Modifier.height(6.dp))
+                TextButton(
+                    onClick = {
                         val intent = android.content.Intent(
                             android.content.Intent.ACTION_VIEW,
                             android.net.Uri.parse(u.downloadUrl)
@@ -279,7 +325,7 @@ private fun AboutSection(viewModel: SettingsViewModel) {
                         ctx.startActivity(android.content.Intent.createChooser(intent, "选择浏览器打开下载页"))
                     },
                     modifier = Modifier.fillMaxWidth()
-                ) { Text("前往下载新版本") }
+                ) { Text("浏览器打开下载页（备用）", style = MaterialTheme.typography.labelMedium) }
             }
             is SettingsViewModel.UpdateUiState.Error -> {
                 Spacer(Modifier.height(6.dp))

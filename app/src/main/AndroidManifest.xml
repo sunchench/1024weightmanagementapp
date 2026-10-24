@@ -4,6 +4,11 @@
 
     <!-- AI 食物识别（可选）：调用用户自配的 OpenAI 兼容视觉接口 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 应用内更新：系统 DownloadManager 下载 APK（Android 10+ 无需写权限） -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <!-- 应用内更新：唤起安装器安装下载的 APK -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:name=".WeightManagementApp"

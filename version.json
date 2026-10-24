@@ -1,13 +1,14 @@
 {
-  "versionCode": 7,
-  "versionName": "3.4",
+  "versionCode": 8,
+  "versionName": "3.5",
   "releaseDate": "2026-10-24",
   "downloadUrl": "https://github.com/sunchench/1024weightmanagementapp/releases/latest",
+  "apkUrl": "https://github.com/sunchench/1024weightmanagementapp/releases/download/v3.5/weight-management-v3.5.apk",
   "releaseNotes": [
+    "v3.5：App 内直接下载更新包并唤起安装（无需浏览器）",
     "v3.4：添加/识别记录支持 AI 自动估算营养值",
     "v3.3：修复切换日期后记录列表残留旧数据",
     "v3.2：拍照识别移植 NutriTracker（失败原因透出）；饮食页合并为单一列表",
-    "v3.1：趋势图时间轴倾斜展示、AI 配置检测按钮、支持相机拍照",
-    "v3.0：拍照识别食物、趋势图坐标轴、最近一周建议、release 签名包"
+    "v3.1：趋势图时间轴倾斜展示、AI 配置检测按钮、支持相机拍照"
   ]
 }

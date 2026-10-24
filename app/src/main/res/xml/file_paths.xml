@@ -4,4 +4,6 @@
     <cache-path name="camera_cache" path="camera/" />
     <!-- 内部存储食物图片（如需分享） -->
     <files-path name="food_images" path="food_images/" />
+    <!-- 公共 Download 目录（更新 APK 安装） -->
+    <external-path name="downloads" path="Download/" />
 </paths>

@@ -15,7 +15,8 @@ data class RemoteVersion(
     val versionCode: Long,
     val versionName: String,
     val releaseDate: String,
-    val downloadUrl: String,
+    val downloadUrl: String,   // GitHub Release 页面（浏览器兜底）
+    val apkUrl: String,        // APK 直链（App 内下载用；为空则回退浏览器）
     val releaseNotes: List<String>
 )
 
@@ -73,6 +74,7 @@ class UpdateChecker {
                         versionName = remoteName,
                         releaseDate = str("releaseDate"),
                         downloadUrl = str("downloadUrl"),
+                        apkUrl = str("apkUrl"),
                         releaseNotes = notes
                     )
                 )
