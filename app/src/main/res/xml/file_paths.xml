@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- 相机拍照临时文件（cache 路径） -->
+    <cache-path name="camera_cache" path="camera/" />
+    <!-- 内部存储食物图片（如需分享） -->
+    <files-path name="food_images" path="food_images/" />
+</paths>

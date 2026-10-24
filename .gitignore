@@ -1,0 +1,31 @@
+# 构建产物
+app/build/
+build/
+.gradle/
+*.apk
+*.jks
+
+# 签名与密钥（不入库！）
+signing/
+keystore.properties
+
+# 本地工具链（体积大，不入库）
+toolchain/
+gradle-home/
+
+# IDE
+.idea/
+*.iml
+local.properties
+
+# 日志与临时文件
+*.log
+*.txt
+!gradle/wrapper/gradle-wrapper.properties
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# WorkBuddy 项目数据
+.workbuddy/
