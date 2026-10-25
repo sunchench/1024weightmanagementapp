@@ -1,12 +1,12 @@
 {
-  "versionCode": 13,
-  "versionName": "3.9",
+  "versionCode": 14,
+  "versionName": "3.10",
   "releaseDate": "2026-10-25",
   "downloadUrl": "https://github.com/sunchench/1024weightmanagementapp/releases/latest",
-  "apkUrl": "https://github.com/sunchench/1024weightmanagementapp/releases/download/v3.9/weight-management-v3.9.apk",
+  "apkUrl": "https://github.com/sunchench/1024weightmanagementapp/releases/download/v3.10/weight-management-v3.10.apk",
   "releaseNotes": [
-    "v3.9：修复备份恢复报 serializer not found（序列化插件缺失）——正式签名完整修复版",
-    "v3.8.1：桥接版修复备份导出（同 bug）",
+    "v3.10：下载完成自动提示安装；修复安装按钮无反应；个人中心只读+编辑模式；备份含 AI 配置；体重页按日期查看；按钮样式统一",
+    "v3.9：修复备份恢复 serializer 错误",
     "v3.7：debug/release 统一正式签名",
     "v3.6：布局优化/目标保存提示/运动页日期历史/导航修复",
     "v3.5：App 内直接下载更新包并唤起安装"
